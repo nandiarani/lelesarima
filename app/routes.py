@@ -38,8 +38,9 @@ def forecast():
     results = mod.fit()
     pred = results.get_prediction(start=start, end=end, dynamic=True)
 
-    #to array
+    #   mean
     mean = round(pred.predicted_mean, 0)
+
     index = list(mean.index.values)
     index = np.asarray(index)
     value = mean.values
@@ -49,15 +50,14 @@ def forecast():
         mIndex.append(str(x.date()))
 
     arrMean = mean.values.tolist()
-    mArrMean = []
 
+    mArrMean = []
     i = 0
     for x in arrMean:
         mData = [x, mIndex[i]]
         mArrMean.append(mData)
         i += 1
-
-    #to dataframe
     dfMean = pd.DataFrame(data=mArrMean, columns=['predict', 'period'])
     dfMean=dfMean.to_json(orient='records')
     return dfMean
+
