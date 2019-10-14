@@ -33,12 +33,12 @@ def forecast():
                        'Jumlah': x_data})
     df = df.set_index('Date')
     start = df.index[-3]
-    end = start + relativedelta(months=+3)
-    mod = sm.tsa.statespace.SARIMAX(df, order=(2, 1, 2), seasonal_order=(0, 1, 0, 12))
+    end = start + relativedelta(months=+2)
+    mod = sm.tsa.statespace.SARIMAX(df, order=(21, 2, 0), seasonal_order=(1, 0, 0, 12))
     results = mod.fit()
     pred = results.get_prediction(start=start, end=end, dynamic=True)
 
-    #   mean
+    #to array
     mean = round(pred.predicted_mean, 0)
     index = list(mean.index.values)
     index = np.asarray(index)
@@ -57,8 +57,7 @@ def forecast():
         mArrMean.append(mData)
         i += 1
 
-    print(mArrMean)
-
-    dfMean = pd.DataFrame(data=mArrMean, columns=['mean', 'period'])
+    #to dataframe
+    dfMean = pd.DataFrame(data=mArrMean, columns=['predict', 'period'])
     dfMean=dfMean.to_json(orient='records')
     return dfMean
